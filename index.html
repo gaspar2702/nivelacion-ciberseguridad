@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Ciberseguridad - Nivelación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .solved-emoji { display: none; font-size: 2rem; animation: bounce 0.5s ease; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans leading-relaxed">
+
+    <header class="py-10 text-center bg-slate-800 border-b border-blue-500/30">
+        <h1 class="text-4xl font-bold text-blue-400">Fundamentos de Ciberseguridad</h1>
+        <p class="mt-2 text-slate-400">Guía Práctica para Detectives Digitales</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6 space-y-12">
+
+        <!-- ACTIVIDAD 1 -->
+        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-yellow-500 shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-yellow-500">Actividad 1: El Detective Digital</h2>
+            <p class="mb-4">Objetivo: Usar <strong>Google Dorking</strong> para encontrar archivos expuestos.</p>
+            <div class="bg-slate-900 p-4 rounded-md font-mono text-sm mb-4 border border-slate-700">
+                site:cl filetype:pdf "confidencial"
+            </div>
+            <p class="text-sm text-slate-400 mb-6">Busca un archivo, tómale una captura y piensa por qué no debería ser público.</p>
+            
+            <button onclick="resolve(this, '🔍')" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
+            <span class="solved-emoji">🔍 ¡Misión Cumplida! Reacciona con 🔍 en WhatsApp</span>
+        </section>
+
+        <!-- ACTIVIDAD 2 -->
+        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-green-500 shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-green-500">Actividad 2: El Mapa de la Red</h2>
+            <p class="mb-4">Objetivo: Rastrear la ruta física de tus datos usando <strong>Traceroute</strong>.</p>
+            <div class="bg-slate-900 p-4 rounded-md font-mono text-sm mb-4 border border-slate-700">
+                Windows: tracert google.com <br>
+                Mac/Linux: traceroute google.com
+            </div>
+            <p class="text-sm text-slate-400 mb-6">¿Cuántos saltos dio tu conexión? ¿Viste asteriscos (*)?</p>
+
+            <button onclick="resolve(this, '🌐')" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
+            <span class="solved-emoji">🌐 ¡Misión Cumplida! Reacciona con 🌐 en WhatsApp</span>
+        </section>
+
+        <!-- ACTIVIDAD 3 -->
+        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-blue-500 shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4 text-blue-500">Actividad 3: El Primer Acceso</h2>
+            <p class="mb-4 text-sm italic">"La mayoría de las herramientas corren en Linux."</p>
+            <table class="w-full text-left text-sm mb-6 bg-slate-900 rounded-lg overflow-hidden">
+                <thead class="bg-slate-700">
+                    <tr><th class="p-3">Dato</th><th class="p-3">Valor</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-800"><td class="p-3">Host</td><td class="p-3 font-mono">bandit.labs.overthewire.org</td></tr>
+                    <tr class="border-b border-slate-800"><td class="p-3">Puerto</td><td class="p-3 font-mono">2220</td></tr>
+                    <tr><td class="p-3">Usuario/Pass</td><td class="p-3 font-mono">bandit0 / bandit0</td></tr>
+                </tbody>
+            </table>
+            <p class="text-sm text-slate-400 mb-6">Usa <code>ls</code> y <code>cat readme</code> para encontrar la clave del nivel 1.</p>
+
+            <button onclick="resolve(this, '🐧')" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
+            <span class="solved-emoji">🐧 ¡Misión Cumplida! Reacciona con 🐧 en WhatsApp</span>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-10 text-slate-500 text-xs">
+        Prof. Benjamin Soto - Ingeniería Civil Informática
+    </footer>
+
+    <script>
+        function resolve(btn, emoji) {
+            const container = btn.parentElement;
+            const emojiSpan = container.querySelector('.solved-emoji');
+            btn.style.display = 'none';
+            emojiSpan.style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>
