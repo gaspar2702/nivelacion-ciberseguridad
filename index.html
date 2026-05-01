@@ -3,81 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio de Ciberseguridad - Nivelación</title>
+    <title>Lab Ciberseguridad - Nivelación</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .solved-emoji { display: none; font-size: 2rem; animation: bounce 0.5s ease; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .solved-section { display: none; animation: slideDown 0.4s ease-out forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans leading-relaxed">
+<body class="bg-slate-950 text-slate-200 font-sans pb-20">
 
-    <header class="py-10 text-center bg-slate-800 border-b border-blue-500/30">
-        <h1 class="text-4xl font-bold text-blue-400">Fundamentos de Ciberseguridad</h1>
-        <p class="mt-2 text-slate-400">Guía Práctica para Detectives Digitales</p>
+    <header class="py-10 text-center border-b border-blue-900 bg-slate-900 shadow-2xl">
+        <h1 class="text-3xl font-bold text-blue-400 px-4">Misión: Detective Digital</h1>
+        <p class="text-slate-500 mt-2">Completa los retos y envía tus hallazgos al sistema.</p>
     </header>
 
-    <main class="max-w-4xl mx-auto p-6 space-y-12">
+    <main class="max-w-2xl mx-auto p-4 mt-8 space-y-10">
 
-        <!-- ACTIVIDAD 1 -->
-        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-yellow-500 shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-yellow-500">Actividad 1: El Detective Digital</h2>
-            <p class="mb-4">Objetivo: Usar <strong>Google Dorking</strong> para encontrar archivos expuestos.</p>
-            <div class="bg-slate-900 p-4 rounded-md font-mono text-sm mb-4 border border-slate-700">
+        <!-- ACTIVIDAD 1: DORKING -->
+        <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+            <h2 class="text-xl font-bold text-yellow-500 mb-2">1. Google Dorking</h2>
+            <p class="text-sm text-slate-300 mb-4">Usa operadores avanzados para encontrar archivos sensibles en la red chilena.</p>
+            <div class="bg-black p-3 rounded-lg mb-4 font-mono text-yellow-400 text-sm border border-slate-700">
                 site:cl filetype:pdf "confidencial"
             </div>
-            <p class="text-sm text-slate-400 mb-6">Busca un archivo, tómale una captura y piensa por qué no debería ser público.</p>
             
-            <button onclick="resolve(this, '🔍')" class="bg-yellow-600 hover:bg-yellow-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
-            <span class="solved-emoji">🔍 ¡Misión Cumplida! Reacciona con 🔍 en WhatsApp</span>
-        </section>
+            <a href="https://www.exploit-db.com/google-hacking-database" target="_blank" class="text-xs text-blue-400 hover:underline mb-6 inline-block">🔍 Pista: ¿Qué más puedo buscar? (Google Hacking DB)</a>
 
-        <!-- ACTIVIDAD 2 -->
-        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-green-500 shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-green-500">Actividad 2: El Mapa de la Red</h2>
-            <p class="mb-4">Objetivo: Rastrear la ruta física de tus datos usando <strong>Traceroute</strong>.</p>
-            <div class="bg-slate-900 p-4 rounded-md font-mono text-sm mb-4 border border-slate-700">
-                Windows: tracert google.com <br>
-                Mac/Linux: traceroute google.com
+            <form class="activity-form space-y-4" onsubmit="handleForm(event, 'Dorking', '🔍')">
+                <input type="text" name="Alumno" placeholder="Tu Nombre" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-yellow-500 outline-none">
+                <textarea name="Justificacion" placeholder="Explica: ¿Por qué este archivo no debería estar indexado en Google?" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm h-24 focus:border-yellow-500 outline-none"></textarea>
+                <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-700 py-2 rounded-lg font-bold transition">Enviar Reporte</button>
+            </form>
+
+            <div class="solved-section mt-4 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-center">
+                <p class="text-yellow-500 font-bold">¡Reporte Enviado! Reacciona con 🔍 en WhatsApp</p>
             </div>
-            <p class="text-sm text-slate-400 mb-6">¿Cuántos saltos dio tu conexión? ¿Viste asteriscos (*)?</p>
-
-            <button onclick="resolve(this, '🌐')" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
-            <span class="solved-emoji">🌐 ¡Misión Cumplida! Reacciona con 🌐 en WhatsApp</span>
         </section>
 
-        <!-- ACTIVIDAD 3 -->
-        <section class="bg-slate-800 p-8 rounded-xl border-l-4 border-blue-500 shadow-lg">
-            <h2 class="text-2xl font-semibold mb-4 text-blue-500">Actividad 3: El Primer Acceso</h2>
-            <p class="mb-4 text-sm italic">"La mayoría de las herramientas corren en Linux."</p>
-            <table class="w-full text-left text-sm mb-6 bg-slate-900 rounded-lg overflow-hidden">
-                <thead class="bg-slate-700">
-                    <tr><th class="p-3">Dato</th><th class="p-3">Valor</th></tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-slate-800"><td class="p-3">Host</td><td class="p-3 font-mono">bandit.labs.overthewire.org</td></tr>
-                    <tr class="border-b border-slate-800"><td class="p-3">Puerto</td><td class="p-3 font-mono">2220</td></tr>
-                    <tr><td class="p-3">Usuario/Pass</td><td class="p-3 font-mono">bandit0 / bandit0</td></tr>
-                </tbody>
-            </table>
-            <p class="text-sm text-slate-400 mb-6">Usa <code>ls</code> y <code>cat readme</code> para encontrar la clave del nivel 1.</p>
+        <!-- ACTIVIDAD 2: TRACEROUTE -->
+        <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+            <h2 class="text-xl font-bold text-green-500 mb-2">2. El Mapa de la Red</h2>
+            <p class="text-sm text-slate-300 mb-4">Rastrea la ruta de tus datos hasta los servidores de Google.</p>
+            
+            <div class="space-y-2 mb-4">
+                <p class="text-xs text-slate-400">En tu CMD o Terminal escribe:</p>
+                <code class="block bg-black p-2 rounded text-green-400 text-sm border border-slate-700">tracert google.com</code>
+            </div>
 
-            <button onclick="resolve(this, '🐧')" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full font-bold transition">¡Resuelto!</button>
-            <span class="solved-emoji">🐧 ¡Misión Cumplida! Reacciona con 🐧 en WhatsApp</span>
+            <form class="activity-form space-y-4" onsubmit="handleForm(event, 'Traceroute', '🌐')">
+                <input type="text" name="Alumno" placeholder="Tu Nombre" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-green-500 outline-none">
+                <input type="text" name="Respuesta" placeholder="¿Cuántos saltos (hops) tomó la conexión?" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-green-500 outline-none">
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-bold transition">Enviar Resultados</button>
+            </form>
+
+            <div class="solved-section mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg text-center">
+                <p class="text-green-500 font-bold">¡Ruta Registrada! Reacciona con 🌐 en WhatsApp</p>
+            </div>
+        </section>
+
+        <!-- ACTIVIDAD 3: SSH -->
+        <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
+            <h2 class="text-xl font-bold text-blue-500 mb-2">3. Acceso Remoto (SSH)</h2>
+            <p class="text-sm text-slate-300 mb-4">Usa la terminal de tu PC para conectarte al servidor de <strong>OverTheWire</strong>.</p>
+            
+            <div class="bg-blue-900/10 p-4 rounded-lg border border-blue-500/20 mb-6">
+                <p class="text-xs font-bold text-blue-400 uppercase mb-2">Instrucciones de Conexión:</p>
+                <ol class="text-xs text-slate-300 space-y-2 list-decimal ml-4">
+                    <li>Abre el <strong>CMD</strong> (Windows) o <strong>Terminal</strong> (Mac/Linux).</li>
+                    <li>Escribe: <code class="bg-black px-1 text-cyan-400">ssh bandit0@bandit.labs.overthewire.org -p 2220</code></li>
+                    <li>Cuando pida password, escribe: <code class="bg-black px-1 text-cyan-400">bandit0</code> (No se verá mientras escribes).</li>
+                    <li>Escribe <code class="text-white font-bold">ls</code> y luego <code class="text-white font-bold">cat readme</code> para hallar la clave.</li>
+                </ol>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <a href="https://www.w3schools.com/linux/linux_ssh.php" target="_blank" class="text-center p-2 bg-slate-800 rounded border border-slate-700 text-[10px] hover:bg-slate-750 transition">📖 ¿Qué es SSH? (W3Schools)</a>
+                <a href="https://webssh.net/" target="_blank" class="text-center p-2 bg-blue-600/20 rounded border border-blue-500/30 text-[10px] hover:bg-blue-600/30 transition">💻 Usar Terminal Web (Alternativa)</a>
+            </div>
+
+            <form class="activity-form space-y-4" onsubmit="handleForm(event, 'Bandit0', '🐧')">
+                <input type="text" name="Alumno" placeholder="Tu Nombre" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-blue-500 outline-none">
+                <input type="text" name="Respuesta" placeholder="Pega aquí la contraseña encontrada" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-blue-500 outline-none">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-bold transition">Validar Acceso</button>
+            </form>
+
+            <div class="solved-section mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-center">
+                <p class="text-blue-500 font-bold">¡Clave Correcta! Reacciona con 🐧 en WhatsApp</p>
+            </div>
         </section>
 
     </main>
 
-    <footer class="text-center py-10 text-slate-500 text-xs">
-        Prof. Benjamin Soto - Ingeniería Civil Informática
-    </footer>
-
     <script>
-        function resolve(btn, emoji) {
-            const container = btn.parentElement;
-            const emojiSpan = container.querySelector('.solved-emoji');
-            btn.style.display = 'none';
-            emojiSpan.style.display = 'inline-block';
+        // PEGA TU URL AQUÍ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUrL91w0isT9XhXlJ-8gm9YZv4Ur06U8TaYesVWxo4NrVLeCGdjakHfKfLZ-fI3CnwSg/exec'; 
+
+        async function handleForm(event, activityName, emoji) {
+            event.preventDefault();
+            const form = event.target;
+            const btn = form.querySelector('button');
+            const solvedSection = form.nextElementSibling;
+            
+            btn.disabled = true;
+            btn.innerText = "Enviando...";
+
+            const formData = new FormData(form);
+            formData.append('Actividad', activityName);
+
+            try {
+                if(SCRIPT_URL !== 'TU_URL_DE_GOOGLE_SCRIPT') {
+                    // Usamos no-cors para evitar bloqueos, el dato llegará igual
+                    await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
+                } else {
+                    console.warn("Falta configurar la URL del script.");
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+
+                form.style.display = 'none';
+                solvedSection.style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                alert("Hubo un problema al enviar. Revisa tu conexión.");
+                btn.disabled = false;
+                btn.innerText = "Reintentar";
+            }
         }
     </script>
 </body>
