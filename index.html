@@ -64,16 +64,14 @@
         <!-- ACTIVIDAD 3: SSH -->
         <section class="bg-slate-900 p-6 rounded-xl border border-slate-800 shadow-lg">
             <h2 class="text-xl font-bold text-blue-500 mb-2">3. Acceso Remoto (SSH)</h2>
-            <p class="text-sm text-slate-300 mb-4">Usa la terminal de tu PC para conectarte al servidor de <strong>OverTheWire</strong>.</p>
+            <p class="text-sm text-slate-300 mb-4">Conéctate al servidor de <strong>OverTheWire</strong> y encuentra la clave oculta.</p>
             
             <div class="bg-blue-900/10 p-4 rounded-lg border border-blue-500/20 mb-6">
-                <p class="text-xs font-bold text-blue-400 uppercase mb-2">Instrucciones de Conexión:</p>
-                <ol class="text-xs text-slate-300 space-y-2 list-decimal ml-4">
-                    <li>Abre el <strong>CMD</strong> (Windows) o <strong>Terminal</strong> (Mac/Linux).</li>
-                    <li>Escribe: <code class="bg-black px-1 text-cyan-400">ssh bandit0@bandit.labs.overthewire.org -p 2220</code></li>
-                    <li>Cuando pida password, escribe: <code class="bg-black px-1 text-cyan-400">bandit0</code> (No se verá mientras escribes).</li>
-                    <li>Escribe <code class="text-white font-bold">ls</code> y luego <code class="text-white font-bold">cat readme</code> para hallar la clave.</li>
-                </ol>
+                <p class="text-xs font-bold text-blue-400 uppercase mb-2 text-center">Datos de Conexión</p>
+                <div class="text-xs text-slate-300 space-y-1 font-mono text-center">
+                    <p>ssh bandit0@bandit.labs.overthewire.org -p 2220</p>
+                    <p>Password: <span class="text-white">bandit0</span></p>
+                </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3 mb-6">
@@ -84,18 +82,19 @@
             <form class="activity-form space-y-4" onsubmit="handleForm(event, 'Bandit0', '🐧')">
                 <input type="text" name="Alumno" placeholder="Tu Nombre" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-blue-500 outline-none">
                 <input type="text" name="Respuesta" placeholder="Pega aquí la contraseña encontrada" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-blue-500 outline-none">
+                <input type="text" name="Justificacion" placeholder="¿Qué comando usaste para leer el archivo? (Ej: cat ./...)" required class="w-full bg-slate-800 border border-slate-700 p-2 rounded text-sm focus:border-blue-500 outline-none">
                 <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded-lg font-bold transition">Validar Acceso</button>
             </form>
 
             <div class="solved-section mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg text-center">
-                <p class="text-blue-500 font-bold">¡Clave Correcta! Reacciona con 🐧 en WhatsApp</p>
+                <p class="text-blue-500 font-bold">¡Clave y Comando Registrados! Reacciona con 🐧 en WhatsApp</p>
             </div>
         </section>
 
     </main>
 
     <script>
-        // PEGA TU URL AQUÍ
+        // REEMPLAZA CON TU URL DE GOOGLE APPS SCRIPT
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUrL91w0isT9XhXlJ-8gm9YZv4Ur06U8TaYesVWxo4NrVLeCGdjakHfKfLZ-fI3CnwSg/exec'; 
 
         async function handleForm(event, activityName, emoji) {
@@ -112,7 +111,7 @@
 
             try {
                 if(SCRIPT_URL !== 'TU_URL_DE_GOOGLE_SCRIPT') {
-                    // Usamos no-cors para evitar bloqueos, el dato llegará igual
+                    // Usamos no-cors para evitar bloqueos de Google, el dato se guarda igual
                     await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
                 } else {
                     console.warn("Falta configurar la URL del script.");
