@@ -101,7 +101,7 @@
             formData.append('Actividad', activityName);
 
             try {
-                if(SCRIPT_URL !== 'TU_URL_DE_GOOGLE_SCRIPT') {
+                if(SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbxUrL91w0isT9XhXlJ-8gm9YZv4Ur06U8TaYesVWxo4NrVLeCGdjakHfKfLZ-fI3CnwSg/exec') {
                     await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
                 } else {
                     console.log("Simulación: Datos enviados correctamente.");
