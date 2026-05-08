@@ -3,247 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detective Digital | Lab Ciberseguridad</title>
+    <title>TERMINAL | Mission: Packet Hunter</title>
     <style>
         :root {
-            --neon-green: #00ff41;
-            --dark-bg: #0d0208;
-            --matrix-gray: #a8a8a8;
-            --warning-red: #ff3131;
-            --info-blue: #008cff;
-            --question-gold: #ffcc00;
-            --transition-speed: 0.4s;
+            --neon: #00ff41;
+            --bg: #0d0208;
+            --gold: #ffcc00;
         }
-
-        * { box-sizing: border-box; cursor: crosshair; }
-
         body {
-            background-color: var(--dark-bg);
-            color: var(--matrix-gray);
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0; padding: 0; overflow: hidden;
+            background-color: var(--bg);
+            color: #a8a8a8;
+            font-family: 'Courier New', monospace;
+            margin: 0; padding: 20px;
+            overflow-x: hidden;
         }
-
-        /* Scanline Effect */
-        body::before {
-            content: " ";
-            display: block; position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 9999; background-size: 100% 2px, 3px 100%; pointer-events: none;
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: var(--neon); text-align: center; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
+        .terminal-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--neon);
+            padding: 25px; margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
         }
-
-        .slide-container { position: relative; height: 100vh; width: 100vw; }
-
-        .slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 40px 80px; opacity: 0; visibility: hidden;
-            transform: translateX(50px); transition: all var(--transition-speed) ease-out;
-            z-index: 1;
-        }
-
-        .slide.active { opacity: 1; visibility: visible; transform: translateX(0); z-index: 2; }
-
-        h1 { color: var(--neon-green); font-size: 2.5rem; text-transform: uppercase; text-shadow: 0 0 15px var(--neon-green); margin-bottom: 5px; }
-        h2 { color: white; font-size: 1.5rem; border-left: 5px solid var(--neon-green); padding-left: 15px; margin-bottom: 20px; width: 100%; max-width: 800px; }
-
-        .terminal-box {
-            background: rgba(0, 0, 0, 0.8); border: 1px solid var(--neon-green);
-            padding: 25px; width: 100%; max-width: 800px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
-        }
-
-        /* Form Elements */
-        input, textarea {
+        .mission-header { color: white; border-left: 4px solid var(--neon); padding-left: 10px; margin-bottom: 15px; }
+        input {
             width: 100%; background: #000; border: 1px solid #333;
-            color: var(--neon-green); padding: 12px; margin-bottom: 15px;
-            font-family: 'Courier New', monospace; outline: none;
+            color: var(--neon); padding: 12px; margin-bottom: 15px;
+            outline: none; font-family: inherit;
         }
-        input:focus, textarea:focus { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
-
-        button.submit-btn {
-            width: 100%; background: transparent; border: 1px solid var(--neon-green);
-            color: var(--neon-green); padding: 12px; font-weight: bold;
-            cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+        input:focus { border-color: var(--neon); }
+        .btn {
+            width: 100%; background: transparent; border: 1px solid var(--neon);
+            color: var(--neon); padding: 12px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
         }
-        button.submit-btn:hover { background: var(--neon-green); color: black; box-shadow: 0 0 15px var(--neon-green); }
-        button:disabled { border-color: #333; color: #333; cursor: not-allowed; }
-
-        .solved-msg { color: var(--question-gold); font-weight: bold; text-align: center; display: none; }
-        
-        .nav-controls {
-            position: fixed; bottom: 20px; right: 30px;
-            display: flex; gap: 15px; z-index: 10000;
-        }
-        .nav-btn {
-            background: rgba(0,0,0,0.5); border: 1px solid var(--neon-green);
-            color: var(--neon-green); padding: 8px 15px; font-family: 'Courier New', monospace;
-            cursor: pointer;
-        }
-        .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--neon-green); transition: width 0.3s; z-index: 10001; }
-        .highlight { color: var(--neon-green); font-weight: bold; }
+        .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 10px var(--neon); }
+        .success { color: var(--gold); font-weight: bold; text-align: center; display: none; }
+        .hint { font-size: 0.8rem; color: #555; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="progress-bar" id="progressBar"></div>
-
-    <div class="nav-controls">
-        <span id="slideCounter" style="color: var(--neon-green); align-self: center; font-size: 0.8rem;"></span>
-        <button class="nav-btn" onclick="changeSlide(-1)">PREV</button>
-        <button class="nav-btn" onclick="changeSlide(1)">NEXT</button>
+<div class="container">
+    <h1>Mission: Packet Hunter</h1>
+    
+    <div class="terminal-card" id="m1">
+        <div class="mission-header">NIVEL 1: El Observador</div>
+        <p class="hint">Busca texto plano en el puerto UDP 1234.</p>
+        <form onsubmit="validate(event, 'UDP_L1{W1R3_HUNT3R}', 10, 'm1')">
+            <input type="text" name="Alumno" placeholder="ID AGENTE" required>
+            <input type="text" name="Flag" placeholder="INGRESA FLAG" required>
+            <button type="submit" class="btn">ENVIAR</button>
+        </form>
+        <div class="success">¡CORRECTO! +10 Puntos</div>
     </div>
 
-    <div class="slide-container">
-        
-        <div class="slide active">
-            <h1>MISIÓN: DETECTIVE DIGITAL</h1>
-            <div class="terminal-box" style="text-align: center;">
-                <p>> Status: <span class="highlight">AWAITING_INPUT</span></p>
-                <p>Bienvenido al sistema de reporte forense.</p>
-                <p>Navega por los retos y envía tus hallazgos.</p>
-                <hr style="border: 0.5px solid var(--neon-green); margin: 20px 0;">
-                <p>USA LAS FLECHAS O EL BOTÓN "NEXT" PARA EMPEZAR</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2>01. Google Dorking</h2>
-            <div class="terminal-box">
-                <p style="margin-bottom: 15px;">Target: <span style="color: var(--question-gold);">site:cl filetype:pdf "confidencial"</span></p>
-                <form onsubmit="handleForm(event, 'Dorking')">
-                    <input type="text" name="Alumno" placeholder="ID DEL AGENTE (NOMBRE)" required>
-                    <textarea name="Justificacion" placeholder="¿QUÉ ENCONTRASTE Y POR QUÉ ES PELIGROSO?" required></textarea>
-                    <button type="submit" class="submit-btn">ENVIAR REPORTE</button>
-                </form>
-                <p class="solved-msg">Misión Enviada. Código de Reacción: 🔍</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2>02. El Mapa de la Red</h2>
-            <div class="terminal-box">
-                <p style="margin-bottom: 15px;">Ejecuta: <span class="highlight">tracert google.com</span></p>
-                <form onsubmit="handleForm(event, 'Traceroute')">
-                    <input type="text" name="Alumno" placeholder="ID DEL AGENTE" required>
-                    <input type="text" name="Respuesta" placeholder="¿CUÁNTOS SALTOS (HOPS) TOMÓ?" required>
-                    <button type="submit" class="submit-btn">REGISTRAR RUTA</button>
-                </form>
-                <p class="solved-msg">Ruta Registrada. Código de Reacción: 🌐</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h2 style="border-color: var(--info-blue);">03. Misión: Wireshark CTF</h2>
-            <div class="terminal-box" style="border-color: var(--info-blue);">
-                <p style="margin-bottom: 10px;">Filtro: <span style="color: var(--info-blue);">udp.port == 1234</span></p>
-                <p style="font-size: 0.8rem; margin-bottom: 15px;">Captura las flags ocultas en el tráfico del ESP32.</p>
-                
-                <form onsubmit="handleCTF(event)">
-                    <input type="text" id="ctf_nombre" name="Alumno" placeholder="ID DEL AGENTE" required>
-                    <input type="text" id="ctf_flag" name="Respuesta" placeholder="INGRESA LA FLAG ENCONTRADA" required>
-                    <button type="submit" class="submit-btn" style="border-color: var(--info-blue); color: var(--info-blue);">VALIDAR FLAG</button>
-                </form>
-                <p id="ctf_feedback" class="solved-msg" style="color: var(--info-blue);">Flag Validada. Puntos enviados al servidor.</p>
-            </div>
-        </div>
-
-        <div class="slide">
-            <h1>FIN DE SESIÓN</h1>
-            <div class="terminal-box" style="text-align: center;">
-                <p class="highlight">TODOS LOS REPORTES HAN SIDO PROCESADOS.</p>
-                <p>Buen trabajo, Agente.</p>
-            </div>
-        </div>
-
+    <div class="terminal-card" id="m2">
+        <div class="mission-header">NIVEL 2: El Traductor</div>
+        <p class="hint">Detecta la cadena codificada y usa Base64 para leerla.</p>
+        <form onsubmit="validate(event, 'Base64_Winner', 25, 'm2')">
+            <input type="text" name="Alumno" placeholder="ID AGENTE" required>
+            <input type="text" name="Flag" placeholder="CONTENIDO DECODIFICADO" required>
+            <button type="submit" class="btn">ENVIAR</button>
+        </form>
+        <div class="success">¡CORRECTO! +25 Puntos</div>
     </div>
 
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUrL91w0isT9XhXlJ-8gm9YZv4Ur06U8TaYesVWxo4NrVLeCGdjakHfKfLZ-fI3CnwSg/exec';
-        
-        // Base de datos local para validación rápida del CTF
-        const CTF_DATABASE = {
-            "UDP_L1{W1R3_HUNT3R}": 10,
-            "UDP_L2{Base64_Winner}": 25,
-            "UDP_L3{P4CK3T_RECON_EXPERT}": 50
-        };
+    <div class="terminal-card" id="m3">
+        <div class="mission-header">NIVEL 3: El Reconstructor</div>
+        <p class="hint">Captura las 3 piezas y únelas: FLAG{PARTE1_PARTE2_PARTE3}</p>
+        <form onsubmit="validate(event, 'UDP_L3{P4CK3T_RECON_EXPERT}', 50, 'm3')">
+            <input type="text" name="Alumno" placeholder="ID AGENTE" required>
+            <input type="text" name="Flag" placeholder="FLAG COMPLETA" required>
+            <button type="submit" class="btn">ENVIAR</button>
+        </form>
+        <div class="success">¡CORRECTO! +50 Puntos</div>
+    </div>
+</div>
 
-        async function handleForm(event, activity) {
-            event.preventDefault();
-            const form = event.target;
-            const btn = form.querySelector('button');
-            const msg = form.nextElementSibling;
+<script>
+    const SCRIPT_URL = 'TU_URL_DE_GOOGLE_SCRIPT_AQUI';
+
+    async function validate(event, correctFlag, points, cardId) {
+        event.preventDefault();
+        const form = event.target;
+        const inputFlag = form.Flag.value.trim();
+        const alumno = form.Alumno.value;
+        const successDiv = document.querySelector(`#${cardId} .success`);
+
+        // Trampa Rickroll
+        if (inputFlag.includes("dQw4w9WgXcQ")) {
+            alert("HA GOT'EM Sigue buscando, agente.");
+            return;
+        }
+
+        if (inputFlag === correctFlag) {
+            form.querySelector('button').innerText = "REGISTRANDO...";
             
-            btn.disabled = true; btn.innerText = "ENVIANDO...";
-
-            const formData = new FormData(form);
-            formData.append('Actividad', activity);
+            const formData = new FormData();
+            formData.append('Alumno', alumno);
+            formData.append('Actividad', `CTF_${cardId}`);
+            formData.append('Respuesta', points);
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
                 form.style.display = 'none';
-                msg.style.display = 'block';
+                successDiv.style.display = 'block';
             } catch (e) {
-                alert("Error de conexión");
-                btn.disabled = false; btn.innerText = "REINTENTAR";
+                alert("Error de conexión con el servidor.");
             }
+        } else {
+            alert("❌ Flag incorrecta. Revisa el tráfico.");
         }
-
-        async function handleCTF(event) {
-            event.preventDefault();
-            const form = event.target;
-            const flagIngresada = document.getElementById('ctf_flag').value.trim();
-            const btn = form.querySelector('button');
-            const msg = document.getElementById('ctf_feedback');
-
-            if (CTF_DATABASE[flagIngresada]) {
-                const puntos = CTF_DATABASE[flagIngresada];
-                btn.innerText = "VALIDANDO...";
-                
-                const formData = new FormData(form);
-                formData.append('Actividad', 'Wireshark_CTF');
-                formData.append('Justificacion', `Flag: ${flagIngresada}`);
-                // Enviamos los puntos en el campo respuesta para el spreadsheet
-                formData.set('Respuesta', puntos);
-
-                try {
-                    await fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
-                    form.style.display = 'none';
-                    msg.innerText = `¡CORRECTO! +${puntos} PUNTOS REGISTRADOS.`;
-                    msg.style.display = 'block';
-                } catch (e) { alert("Error de servidor"); }
-            } else {
-                alert("❌ FLAG INVÁLIDA O RICKROLL DETECTADO.");
-            }
-        }
-
-        // Lógica de Diapositivas
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const progressBar = document.getElementById('progressBar');
-        const counter = document.getElementById('slideCounter');
-
-        function updateSlide() {
-            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
-            progressBar.style.width = ((currentSlide + 1) / slides.length * 100) + '%';
-            counter.innerText = `NODE ${currentSlide + 1}/${slides.length}`;
-        }
-
-        function changeSlide(n) {
-            currentSlide += n;
-            if (currentSlide < 0) currentSlide = 0;
-            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
-            updateSlide();
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') changeSlide(1);
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-        });
-
-        updateSlide();
-    </script>
+    }
+</script>
 </body>
 </html>
