@@ -18,14 +18,22 @@
             overflow: hidden;
         }
 
+        /* ANIMACIONES */
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        
+        .animate-slide-in { animation: slideIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
+        .shake-screen { animation: shake 0.3s ease-in-out; }
+
         /* BARRA SUPERIOR */
         .top-bar {
             background-color: #1a1c1a;
             border-bottom: 3px solid #000;
-            padding: 10px 20px;
+            padding: 10px;
             display: flex;
             justify-content: space-between;
-            font-size: 1.5em;
+            font-size: 1.2em;
             text-transform: uppercase;
             box-shadow: 0 5px 10px rgba(0,0,0,0.5);
             z-index: 10;
@@ -38,96 +46,44 @@
             background-color: #2b302c;
             background-image: repeating-linear-gradient(45deg, #2b302c 25%, #282d29 25%, #282d29 50%, #2b302c 50%, #2b302c 75%, #282d29 75%, #282d29 100%);
             background-size: 40px 40px;
-            padding: 20px;
-            gap: 20px;
+            padding: 15px;
+            gap: 15px;
+            overflow-y: auto;
         }
 
-        /* ÁREA DEL DOCUMENTO (IZQUIERDA) */
-        .document-area {
-            flex: 2;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        /* ÁREA DEL DOCUMENTO */
+        .document-area { flex: 2; display: flex; justify-content: center; align-items: flex-start; }
 
         .paper {
             background-color: #d6d0ba;
             color: #1a1a1a;
-            width: 80%;
-            height: 90%;
-            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
             border: 1px solid #8c8872;
             box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
             position: relative;
             font-size: 1.3em;
-            overflow-y: auto;
+            transform: translateX(-100%); /* Oculto inicial para animación */
         }
 
-        .paper-header {
-            text-align: center;
-            border-bottom: 2px solid #555;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
+        .paper-header { text-align: center; border-bottom: 2px solid #555; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
         .field { margin-bottom: 15px; border-bottom: 1px dotted #8c8872; padding-bottom: 5px; }
-        .label { font-weight: bold; color: #524f42; font-size: 1em; text-transform: uppercase; }
-        .data { font-size: 1.2em; margin-top: 5px; word-wrap: break-word; font-family: monospace; }
+        .label { font-weight: bold; color: #524f42; font-size: 0.9em; text-transform: uppercase; }
+        .data { font-size: 1.1em; margin-top: 5px; word-wrap: break-word; font-family: monospace; }
 
-        /* PANEL DE HERRAMIENTAS (DERECHA) */
-        .tools-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        /* PANEL DE HERRAMIENTAS */
+        .tools-area { flex: 1; display: flex; flex-direction: column; gap: 15px; max-width: 400px; }
+        .tool-box { background-color: #1a1c1a; border: 3px solid #000; padding: 15px; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+        .tool-title { text-align: center; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #6a756d; text-transform: uppercase; }
+        .booth-dialogue { color: #b0c4b6; font-size: 1.3em; min-height: 80px; }
 
-        .tool-box {
-            background-color: #1a1c1a;
-            border: 3px solid #000;
-            padding: 15px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-        }
-
-        .tool-title {
-            text-align: center;
-            border-bottom: 1px solid #444;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-            color: #6a756d;
-            text-transform: uppercase;
-        }
-
-        /* DIÁLOGO / BOOTH */
-        .booth-dialogue {
-            color: #b0c4b6;
-            font-size: 1.3em;
-            min-height: 60px;
-        }
-
-        /* BOTONES DE SELLADO */
-        .action-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
+        /* BOTONES */
+        .action-controls { display: flex; flex-direction: column; gap: 10px; }
         button {
-            font-family: 'VT323', monospace;
-            font-size: 1.8em;
-            padding: 15px;
-            cursor: pointer;
-            border: 4px solid #000;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: transform 0.1s;
+            font-family: 'VT323', monospace; font-size: 1.5em; padding: 15px; cursor: pointer;
+            border: 4px solid #000; text-transform: uppercase; font-weight: bold; transition: transform 0.1s;
         }
-        
         button:active { transform: translateY(4px); }
         button:disabled { opacity: 0.3; cursor: not-allowed; }
 
@@ -135,121 +91,90 @@
         .btn-allow { background-color: #1e5223; color: #99ffaa; border-top-color: #2b7a33; border-left-color: #2b7a33; }
         .btn-neutral { background-color: #3d423e; color: #a1b5a5; width: 100%; border-top-color: #5c635d; border-left-color: #5c635d; }
 
-        /* SELLOS ANIMADOS */
+        input[type="text"] {
+            font-family: 'VT323', monospace; background: #000; color: #99ffaa; font-size: 1.5em;
+            padding: 10px; border: 2px solid #5c635d; text-align: center; width: 80%; margin-bottom: 20px;
+        }
+
+        /* SELLOS Y CITACIONES */
         .stamp {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(3);
-            font-size: 6em;
-            font-weight: bold;
-            border: 8px solid;
-            padding: 5px 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.15s ease-out;
-            z-index: 10;
-            text-transform: uppercase;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(3);
+            font-size: 4em; font-weight: bold; border: 6px solid; padding: 5px 10px; opacity: 0;
+            pointer-events: none; transition: all 0.15s ease-out; z-index: 10; text-transform: uppercase;
         }
         .stamp.show { transform: translate(-50%, -50%) scale(1) rotate(-15deg); opacity: 0.85; }
         .stamp-pass { color: #1e5223; border-color: #1e5223; }
         .stamp-fail { color: #701616; border-color: #701616; }
 
-        /* CITACIONES (ERRORES) */
         .citation-slip {
-            background-color: #8c3232;
-            color: #111;
-            padding: 10px;
-            border: 2px solid #4a1515;
-            margin-top: 10px;
-            font-size: 1.2em;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            display: none;
-            animation: slideUp 0.3s ease-out;
+            background-color: #8c3232; color: #111; padding: 10px; border: 2px solid #4a1515;
+            font-size: 1.2em; display: none; animation: slideUp 0.3s ease-out;
         }
-
         .citation-slip.show { display: block; }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         .hidden { display: none !important; }
 
         /* PANTALLAS SUPERPUESTAS */
         .overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(18, 20, 18, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(18, 20, 18, 0.98); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 50; text-align: center; padding: 20px; box-sizing: border-box;
         }
+        h1 { font-size: 3.5em; margin-bottom: 10px; text-shadow: 4px 4px 0 #000; color: #b0c4b6; }
 
-        h1 { font-size: 4em; margin-bottom: 10px; text-shadow: 4px 4px 0 #000; color: #b0c4b6; }
+        /* MEDIA QUERIES PARA MÓVIL */
+        @media (max-width: 768px) {
+            .desk-container { flex-direction: column; }
+            .tools-area { max-width: 100%; flex-direction: column-reverse; }
+            .action-controls { flex-direction: row; }
+            .action-controls button { flex: 1; padding: 10px; font-size: 1.2em; }
+            h1 { font-size: 2.5em; }
+        }
     </style>
 </head>
 <body>
 
 <div id="start-screen" class="overlay">
     <h1>GLORIA AL SOC</h1>
-    <p style="font-size: 2em; margin-bottom: 30px;">Iniciando terminal de inspección...</p>
-    <button id="btn-start" class="btn-neutral" style="width: 300px;" onclick="startGame()" disabled>CONECTANDO...</button>
+    <p style="font-size: 1.5em; margin-bottom: 20px;">Identifíquese, Operador.</p>
+    <input type="text" id="operator-name" placeholder="Ingrese su nombre..." autocomplete="off">
+    <button id="btn-start" class="btn-neutral" style="max-width: 300px;" onclick="startGame()" disabled>CONECTANDO...</button>
 </div>
 
 <div id="end-screen" class="overlay hidden">
     <h1>TURNO FINALIZADO</h1>
-    <div id="final-stats" style="font-size: 2em; margin-bottom: 20px; text-align: center;"></div>
-    <div id="final-verdict" style="font-size: 2.5em; margin-bottom: 40px; text-align: center;"></div>
-    <button class="btn-neutral" style="width: 300px;" onclick="location.reload()">Siguiente Turno</button>
+    <div id="final-stats" style="font-size: 2em; margin-bottom: 20px;"></div>
+    <div id="final-verdict" style="font-size: 2em; margin-bottom: 30px;"></div>
+    <p id="save-status" style="color: #a1b5a5; font-size: 1.5em;">Enviando reporte al Ministerio...</p>
+    <button class="btn-neutral" style="max-width: 300px; margin-top: 20px;" onclick="location.reload()">Siguiente Turno</button>
 </div>
 
 <div class="top-bar">
-    <span id="hud-date">Fecha: 1982-11-23</span>
-    <span>Ministerio de Información</span>
-    <span id="hud-penalties">Penalizaciones: 0</span>
+    <span id="hud-name">Op: Desconocido</span>
+    <span style="text-align: center;">MINISTERIO DE INFORMACIÓN</span>
+    <span id="hud-penalties">Errores: 0</span>
 </div>
 
-<div class="desk-container">
+<div class="desk-container" id="main-desk">
     
     <div class="document-area">
         <div class="paper" id="document-paper">
             <div id="stamp" class="stamp"></div>
+            <div class="paper-header">Manifiesto de Red</div>
             
-            <div class="paper-header">Manifiesto de Tráfico de Red</div>
-            
-            <div class="field">
-                <div class="label">Remitente Registrado:</div>
-                <div class="data" id="f-sender"></div>
-            </div>
-            <div class="field" id="wrap-ip">
-                <div class="label">Origen (IP):</div>
-                <div class="data" id="f-ip"></div>
-            </div>
-            <div class="field">
-                <div class="label">Asunto Declarado:</div>
-                <div class="data" id="f-subject"></div>
-            </div>
-            <div class="field" id="wrap-attachment">
-                <div class="label">Carga Adjunta:</div>
-                <div class="data" id="f-attachment"></div>
-            </div>
-            <div class="field" style="border: none;">
-                <div class="label">Cuerpo del Mensaje:</div>
-                <div class="data" id="f-body" style="white-space: pre-wrap;"></div>
-            </div>
+            <div class="field"><div class="label">Remitente Registrado:</div><div class="data" id="f-sender"></div></div>
+            <div class="field" id="wrap-ip"><div class="label">Origen (IP):</div><div class="data" id="f-ip"></div></div>
+            <div class="field"><div class="label">Asunto Declarado:</div><div class="data" id="f-subject"></div></div>
+            <div class="field" id="wrap-attachment"><div class="label">Carga Adjunta:</div><div class="data" id="f-attachment"></div></div>
+            <div class="field" style="border: none;"><div class="label">Cuerpo del Mensaje:</div><div class="data" id="f-body" style="white-space: pre-wrap;"></div></div>
         </div>
     </div>
 
     <div class="tools-area">
         
-        <div class="tool-box">
-            <div class="tool-title">Transmisión Entrante</div>
-            <div class="booth-dialogue" id="dialogue-box">
-                "Inspector, analice el documento en su escritorio. Decida su validez."
+        <div class="tool-box" style="border-color: #301010; background-color: #1a0808;">
+            <div class="tool-title" style="color: #8c3232;">Infracciones</div>
+            <div id="citation-box" class="citation-slip">
+                <b>[ CITACIÓN ]</b><br><span id="citation-text"></span>
             </div>
         </div>
 
@@ -262,25 +187,24 @@
             <button id="btn-next" class="btn-neutral hidden" onclick="loadTicket()">LLAMAR SIGUIENTE</button>
         </div>
 
-        <div class="tool-box" style="flex-grow: 1; border-color: #301010; background-color: #1a0808;">
-            <div class="tool-title" style="color: #8c3232;">Protocolo de Infracciones</div>
-            <div id="citation-box" class="citation-slip">
-                <b>[ CITACIÓN EMITIDA ]</b><br><br>
-                <span id="citation-text"></span>
-            </div>
+        <div class="tool-box">
+            <div class="tool-title">Transmisión</div>
+            <div class="booth-dialogue" id="dialogue-box"></div>
         </div>
 
     </div>
 </div>
 
 <script>
-    // ====== URL DEL BACKEND ======
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwopzfiiKD9QC7OHsBFFEjc6uWpYgxgryhHJ4zn648_oeZ6McU-KftYkW10cQTrOTj0/exec'; 
-    // =============================
+    // ====== REEMPLAZAR CON TU URL DE APPS SCRIPT ======
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuB6etQKfKCe_lm23LI3QYuqz9LrPjtGGzSZrOYGGB8hJgmntxkDUiddhSBDxJkVGz/exec'; 
+    // ====================================================
 
     let tickets = [];
     let currentIndex = 0;
     let penalties = 0;
+    let operatorName = "";
+    let typeWriterInterval;
 
     window.onload = async () => {
         try {
@@ -294,7 +218,26 @@
         }
     };
 
+    function typeWriter(text, elementId, speed = 30) {
+        clearInterval(typeWriterInterval);
+        const el = document.getElementById(elementId);
+        el.innerHTML = "";
+        let i = 0;
+        typeWriterInterval = setInterval(() => {
+            if (i < text.length) { el.innerHTML += text.charAt(i); i++; } 
+            else { clearInterval(typeWriterInterval); }
+        }, speed);
+    }
+
     function startGame() {
+        const inputName = document.getElementById('operator-name').value.trim();
+        if (!inputName) {
+            document.getElementById('start-screen').classList.add('shake-screen');
+            setTimeout(() => document.getElementById('start-screen').classList.remove('shake-screen'), 300);
+            return;
+        }
+        operatorName = inputName;
+        document.getElementById('hud-name').innerText = `Op: ${operatorName}`;
         document.getElementById('start-screen').classList.add('hidden');
         loadTicket();
     }
@@ -304,19 +247,25 @@
 
         const t = tickets[currentIndex];
         
-        // Reset UI
+        // Reset UI y animar documento
+        const paper = document.getElementById('document-paper');
+        paper.classList.remove('animate-slide-in');
+        void paper.offsetWidth; // Trigger reflow
+        paper.classList.add('animate-slide-in');
+
         document.getElementById('stamp').className = 'stamp';
         document.getElementById('citation-box').classList.remove('show');
         document.getElementById('action-buttons').classList.remove('hidden');
         document.getElementById('btn-next').classList.add('hidden');
-        document.getElementById('dialogue-box').innerText = `"Nivel de alerta: ${t.nivel}. Inspeccione."`;
+        
+        document.getElementById('dialogue-box').style.color = "#b0c4b6";
+        typeWriter(`"Nivel de alerta: ${t.nivel}. Inspeccione el documento."`, 'dialogue-box');
 
-        // Datos del papel
+        // Llenar datos
         document.getElementById('f-sender').innerText = t.remitente;
         document.getElementById('f-subject').innerText = t.asunto;
         document.getElementById('f-body').innerText = t.cuerpo;
 
-        // Ocultar IP/Adjunto si no hay datos
         document.getElementById('wrap-ip').style.display = t.ip ? 'block' : 'none';
         document.getElementById('f-ip').innerText = t.ip || '';
         document.getElementById('wrap-attachment').style.display = t.adjunto ? 'block' : 'none';
@@ -330,30 +279,27 @@
         document.getElementById('action-buttons').classList.add('hidden');
         
         const stamp = document.getElementById('stamp');
-        if (playerDecision) {
-            stamp.innerText = "PERMITIDO";
-            stamp.classList.add('stamp-pass');
-        } else {
-            stamp.innerText = "DENEGADO";
-            stamp.classList.add('stamp-fail');
-        }
-        
+        stamp.innerText = playerDecision ? "PERMITIDO" : "DENEGADO";
+        stamp.classList.add(playerDecision ? 'stamp-pass' : 'stamp-fail');
         setTimeout(() => stamp.classList.add('show'), 50);
 
         setTimeout(() => {
-            const citation = document.getElementById('citation-box');
-            const citationText = document.getElementById('citation-text');
-            
             if (isCorrect) {
-                document.getElementById('dialogue-box').innerText = `"Decisión correcta. Continúe."`;
                 document.getElementById('dialogue-box').style.color = "#99ffaa";
+                typeWriter(`"Resolución correcta. Prosiga."`, 'dialogue-box');
             } else {
                 penalties++;
-                document.getElementById('hud-penalties').innerText = `Penalizaciones: ${penalties}`;
-                document.getElementById('dialogue-box').innerText = `"Error detectado. Citación emitida."`;
-                document.getElementById('dialogue-box').style.color = "#ff9999";
+                document.getElementById('hud-penalties').innerText = `Errores: ${penalties}`;
                 
-                citationText.innerHTML = `Resolución inválida.<br><b>Motivo:</b> ${t.razon}`;
+                // Efecto de error (Shake)
+                document.getElementById('main-desk').classList.add('shake-screen');
+                setTimeout(() => document.getElementById('main-desk').classList.remove('shake-screen'), 300);
+
+                document.getElementById('dialogue-box').style.color = "#ff9999";
+                typeWriter(`"¡Incompetencia! Citación emitida."`, 'dialogue-box');
+                
+                const citation = document.getElementById('citation-box');
+                document.getElementById('citation-text').innerHTML = `Error de protocolo.<br><b>Causa:</b> ${t.razon}`;
                 citation.classList.add('show');
             }
             
@@ -362,20 +308,31 @@
         }, 800);
     }
 
-    function endGame() {
+    async function endGame() {
         document.getElementById('end-screen').classList.remove('hidden');
         document.getElementById('final-stats').innerHTML = `Inspecciones: ${tickets.length}<br>Penalizaciones: ${penalties}`;
         
+        let verdictText = "";
+        let verdictColor = "";
+        if (penalties === 0) { verdictText = "Trabajo perfecto. Gloria al SOC."; verdictColor = "#99ffaa"; } 
+        else if (penalties <= 2) { verdictText = "Rendimiento aceptable."; verdictColor = "#d6d0ba"; } 
+        else { verdictText = "Desempeño deficiente. Será investigado."; verdictColor = "#ff9999"; }
+        
         const verdict = document.getElementById('final-verdict');
-        if (penalties === 0) {
-            verdict.innerText = "Trabajo perfecto. Gloria al SOC.";
-            verdict.style.color = "#99ffaa";
-        } else if (penalties <= 2) {
-            verdict.innerText = "Rendimiento aceptable. Se descontará de su sueldo.";
-            verdict.style.color = "#d6d0ba";
-        } else {
-            verdict.innerText = "Despedido. El Ministerio tomará acciones legales.";
-            verdict.style.color = "#ff9999";
+        verdict.innerText = verdictText;
+        verdict.style.color = verdictColor;
+
+        // Guardar en Base de Datos
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify({ nombre: operatorName, total: tickets.length, sanciones: penalties, veredicto: verdictText })
+            });
+            document.getElementById('save-status').innerText = "Reporte guardado en el archivo del Ministerio.";
+            document.getElementById('save-status').style.color = "#99ffaa";
+        } catch (e) {
+            document.getElementById('save-status').innerText = "Error al conectar con los archivos centrales.";
+            document.getElementById('save-status').style.color = "#ff9999";
         }
     }
 </script>
