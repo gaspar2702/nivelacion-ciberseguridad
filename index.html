@@ -7,64 +7,38 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'VT323', monospace;
-            background-color: #121412;
-            color: #8c9c90;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            user-select: none;
-            overflow: hidden;
+            font-family: 'VT323', monospace; background-color: #121412; color: #8c9c90; margin: 0;
+            height: 100vh; display: flex; flex-direction: column; user-select: none; overflow: hidden;
         }
 
         /* ANIMACIONES */
         @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         
         .animate-slide-in { animation: slideIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; }
         .shake-screen { animation: shake 0.3s ease-in-out; }
+        .sync-active { color: #99ffaa !important; animation: blink 0.5s infinite; }
 
         /* BARRA SUPERIOR */
         .top-bar {
-            background-color: #1a1c1a;
-            border-bottom: 3px solid #000;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.2em;
-            text-transform: uppercase;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-            z-index: 10;
+            background-color: #1a1c1a; border-bottom: 3px solid #000; padding: 10px; display: flex;
+            justify-content: space-between; font-size: 1.2em; text-transform: uppercase; box-shadow: 0 5px 10px rgba(0,0,0,0.5); z-index: 10;
         }
 
         /* ESCRITORIO PRINCIPAL */
         .desk-container {
-            display: flex;
-            flex-grow: 1;
-            background-color: #2b302c;
+            display: flex; flex-grow: 1; background-color: #2b302c;
             background-image: repeating-linear-gradient(45deg, #2b302c 25%, #282d29 25%, #282d29 50%, #2b302c 50%, #2b302c 75%, #282d29 75%, #282d29 100%);
-            background-size: 40px 40px;
-            padding: 15px;
-            gap: 15px;
-            overflow-y: auto;
+            background-size: 40px 40px; padding: 15px; gap: 15px; overflow-y: auto;
         }
 
-        /* ÁREA DEL DOCUMENTO */
         .document-area { flex: 2; display: flex; justify-content: center; align-items: flex-start; }
 
         .paper {
-            background-color: #d6d0ba;
-            color: #1a1a1a;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            border: 1px solid #8c8872;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
-            position: relative;
-            font-size: 1.3em;
-            transform: translateX(-100%); /* Oculto inicial para animación */
+            background-color: #d6d0ba; color: #1a1a1a; width: 100%; max-width: 600px; padding: 20px;
+            border: 1px solid #8c8872; box-shadow: 5px 5px 15px rgba(0,0,0,0.6); position: relative;
+            font-size: 1.3em; transform: translateX(-100%);
         }
 
         .paper-header { text-align: center; border-bottom: 2px solid #555; padding-bottom: 10px; margin-bottom: 20px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
@@ -115,13 +89,11 @@
 
         /* PANTALLAS SUPERPUESTAS */
         .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(18, 20, 18, 0.98); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 50; text-align: center; padding: 20px; box-sizing: border-box;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(18, 20, 18, 0.98);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; text-align: center; padding: 20px; box-sizing: border-box;
         }
         h1 { font-size: 3.5em; margin-bottom: 10px; text-shadow: 4px 4px 0 #000; color: #b0c4b6; }
 
-        /* MEDIA QUERIES PARA MÓVIL */
         @media (max-width: 768px) {
             .desk-container { flex-direction: column; }
             .tools-area { max-width: 100%; flex-direction: column-reverse; }
@@ -144,13 +116,13 @@
     <h1>TURNO FINALIZADO</h1>
     <div id="final-stats" style="font-size: 2em; margin-bottom: 20px;"></div>
     <div id="final-verdict" style="font-size: 2em; margin-bottom: 30px;"></div>
-    <p id="save-status" style="color: #a1b5a5; font-size: 1.5em;">Enviando reporte al Ministerio...</p>
+    <p id="save-status" style="color: #a1b5a5; font-size: 1.5em;">Cerrando sesión en el Ministerio...</p>
     <button class="btn-neutral" style="max-width: 300px; margin-top: 20px;" onclick="location.reload()">Siguiente Turno</button>
 </div>
 
 <div class="top-bar">
     <span id="hud-name">Op: Desconocido</span>
-    <span style="text-align: center;">MINISTERIO DE INFORMACIÓN</span>
+    <span style="text-align: center; color: #5c635d;" id="sync-status">[EN ESPERA]</span>
     <span id="hud-penalties">Errores: 0</span>
 </div>
 
@@ -197,7 +169,7 @@
 
 <script>
     // ====== REEMPLAZAR CON TU URL DE APPS SCRIPT ======
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyuB6etQKfKCe_lm23LI3QYuqz9LrPjtGGzSZrOYGGB8hJgmntxkDUiddhSBDxJkVGz/exec'; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0DkjFBP-V_3wA5vjaBOYuhYw-b5RBYpVFLFnshXVMroUhsgve4CHFO7xcWZxoE_Ob/exec'; 
     // ====================================================
 
     let tickets = [];
@@ -229,6 +201,34 @@
         }, speed);
     }
 
+    // Función asíncrona de autoguardado
+    async function syncProgress(isFinal = false, veredicto = "-") {
+        const syncLabel = document.getElementById('sync-status');
+        syncLabel.innerText = "[ENVIANDO DATOS...]";
+        syncLabel.classList.add('sync-active');
+
+        const payload = {
+            nombre: operatorName,
+            total: currentIndex, // Al llamarse después de sumar, envía el progreso correcto
+            sanciones: penalties,
+            estado: isFinal ? "Finalizado" : "En progreso",
+            veredicto: veredicto
+        };
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST', mode: 'no-cors',
+                body: JSON.stringify(payload)
+            });
+            syncLabel.innerText = "[CONECTADO]";
+        } catch (e) {
+            syncLabel.innerText = "[ERROR DE RED]";
+            syncLabel.style.color = "#ff9999";
+        }
+        
+        setTimeout(() => syncLabel.classList.remove('sync-active'), 500);
+    }
+
     function startGame() {
         const inputName = document.getElementById('operator-name').value.trim();
         if (!inputName) {
@@ -247,10 +247,9 @@
 
         const t = tickets[currentIndex];
         
-        // Reset UI y animar documento
         const paper = document.getElementById('document-paper');
         paper.classList.remove('animate-slide-in');
-        void paper.offsetWidth; // Trigger reflow
+        void paper.offsetWidth; 
         paper.classList.add('animate-slide-in');
 
         document.getElementById('stamp').className = 'stamp';
@@ -261,7 +260,6 @@
         document.getElementById('dialogue-box').style.color = "#b0c4b6";
         typeWriter(`"Nivel de alerta: ${t.nivel}. Inspeccione el documento."`, 'dialogue-box');
 
-        // Llenar datos
         document.getElementById('f-sender').innerText = t.remitente;
         document.getElementById('f-subject').innerText = t.asunto;
         document.getElementById('f-body').innerText = t.cuerpo;
@@ -291,7 +289,6 @@
                 penalties++;
                 document.getElementById('hud-penalties').innerText = `Errores: ${penalties}`;
                 
-                // Efecto de error (Shake)
                 document.getElementById('main-desk').classList.add('shake-screen');
                 setTimeout(() => document.getElementById('main-desk').classList.remove('shake-screen'), 300);
 
@@ -303,8 +300,11 @@
                 citation.classList.add('show');
             }
             
-            document.getElementById('btn-next').classList.remove('hidden');
+            // Incrementar contador y guardar en la BD silenciosamente
             currentIndex++;
+            syncProgress(false);
+
+            document.getElementById('btn-next').classList.remove('hidden');
         }, 800);
     }
 
@@ -322,18 +322,9 @@
         verdict.innerText = verdictText;
         verdict.style.color = verdictColor;
 
-        // Guardar en Base de Datos
-        try {
-            await fetch(SCRIPT_URL, {
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({ nombre: operatorName, total: tickets.length, sanciones: penalties, veredicto: verdictText })
-            });
-            document.getElementById('save-status').innerText = "Reporte guardado en el archivo del Ministerio.";
-            document.getElementById('save-status').style.color = "#99ffaa";
-        } catch (e) {
-            document.getElementById('save-status').innerText = "Error al conectar con los archivos centrales.";
-            document.getElementById('save-status').style.color = "#ff9999";
-        }
+        document.getElementById('save-status').innerText = "Sellando expediente final...";
+        await syncProgress(true, verdictText);
+        document.getElementById('save-status').innerText = "Expediente guardado en los archivos centrales.";
     }
 </script>
 
