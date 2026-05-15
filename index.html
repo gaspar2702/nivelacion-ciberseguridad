@@ -3,175 +3,280 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINISTERIO DE CIBERSEGURIDAD - SOC</title>
+    <title>MINISTERIO DE CIBERSEGURIDAD - CONTROL FRONTERIZO</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'VT323', monospace;
-            background-color: #111;
-            color: #b0b0b0;
+            background-color: #121412;
+            color: #8c9c90;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        /* BARRA SUPERIOR */
+        .top-bar {
+            background-color: #1a1c1a;
+            border-bottom: 3px solid #000;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5em;
+            text-transform: uppercase;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* ESCRITORIO PRINCIPAL */
+        .desk-container {
+            display: flex;
+            flex-grow: 1;
+            background-color: #2b302c;
+            background-image: repeating-linear-gradient(45deg, #2b302c 25%, #282d29 25%, #282d29 50%, #2b302c 50%, #2b302c 75%, #282d29 75%, #282d29 100%);
+            background-size: 40px 40px;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* ÁREA DEL DOCUMENTO (IZQUIERDA) */
+        .document-area {
+            flex: 2;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            user-select: none;
         }
-        .desk {
-            background-color: #2c302e;
-            border: 4px solid #1a1c19;
-            padding: 20px;
-            width: 700px;
-            height: 80vh;
-            position: relative;
-            box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-        }
-        h1 {
-            text-align: center;
-            color: #7b8075;
-            border-bottom: 2px solid #1a1c19;
-            padding-bottom: 10px;
-            margin-top: 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
+
         .paper {
-            background-color: #e0d8b0;
-            color: #2b2b2b;
-            padding: 20px;
-            border: 1px solid #a8a078;
-            margin-top: 10px;
-            flex-grow: 1;
+            background-color: #d6d0ba;
+            color: #1a1a1a;
+            width: 80%;
+            height: 90%;
+            padding: 30px;
+            border: 1px solid #8c8872;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.6);
             position: relative;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            font-size: 1.3em;
             overflow-y: auto;
         }
-        .field { margin-bottom: 15px; border-bottom: 1px dashed #a8a078; padding-bottom: 5px; }
-        .label { font-weight: bold; color: #5c5949; text-transform: uppercase; font-size: 1.2em; }
-        .data { font-size: 1.4em; margin-top: 5px; word-wrap: break-word; }
-        
-        .controls { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-        button {
-            font-family: 'VT323', monospace;
-            font-size: 1.5em;
-            padding: 10px;
-            cursor: pointer;
-            border: 4px solid #111;
-            box-shadow: 2px 2px 0 #000;
-            transition: all 0.1s;
+
+        .paper-header {
+            text-align: center;
+            border-bottom: 2px solid #555;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .field { margin-bottom: 15px; border-bottom: 1px dotted #8c8872; padding-bottom: 5px; }
+        .label { font-weight: bold; color: #524f42; font-size: 1em; text-transform: uppercase; }
+        .data { font-size: 1.2em; margin-top: 5px; word-wrap: break-word; font-family: monospace; }
+
+        /* PANEL DE HERRAMIENTAS (DERECHA) */
+        .tools-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tool-box {
+            background-color: #1a1c1a;
+            border: 3px solid #000;
+            padding: 15px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .tool-title {
+            text-align: center;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            color: #6a756d;
             text-transform: uppercase;
         }
-        button:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #000; }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .btn-deny { background-color: #8a0303; color: #ffb8b8; width: 50%; }
-        .btn-allow { background-color: #125e0a; color: #b8ffb8; width: 50%; }
-        .btn-neutral { background-color: #4a4a4a; color: #d0d0d0; width: 100%; margin-top: 15px; }
 
-        /* Sello animado */
+        /* DIÁLOGO / BOOTH */
+        .booth-dialogue {
+            color: #b0c4b6;
+            font-size: 1.3em;
+            min-height: 60px;
+        }
+
+        /* BOTONES DE SELLADO */
+        .action-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            font-family: 'VT323', monospace;
+            font-size: 1.8em;
+            padding: 15px;
+            cursor: pointer;
+            border: 4px solid #000;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+        
+        button:active { transform: translateY(4px); }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .btn-deny { background-color: #701616; color: #ff9999; border-top-color: #992b2b; border-left-color: #992b2b; }
+        .btn-allow { background-color: #1e5223; color: #99ffaa; border-top-color: #2b7a33; border-left-color: #2b7a33; }
+        .btn-neutral { background-color: #3d423e; color: #a1b5a5; width: 100%; border-top-color: #5c635d; border-left-color: #5c635d; }
+
+        /* SELLOS ANIMADOS */
         .stamp {
             position: absolute;
-            top: 40%;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(5);
-            font-size: 5em;
+            transform: translate(-50%, -50%) scale(3);
+            font-size: 6em;
             font-weight: bold;
             border: 8px solid;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 5px 20px;
             opacity: 0;
             pointer-events: none;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+            transition: all 0.15s ease-out;
             z-index: 10;
+            text-transform: uppercase;
         }
-        .stamp.show { transform: translate(-50%, -50%) scale(1) rotate(-15deg); opacity: 0.9; }
-        .stamp-pass { color: #125e0a; border-color: #125e0a; }
-        .stamp-fail { color: #8a0303; border-color: #8a0303; }
+        .stamp.show { transform: translate(-50%, -50%) scale(1) rotate(-15deg); opacity: 0.85; }
+        .stamp-pass { color: #1e5223; border-color: #1e5223; }
+        .stamp-fail { color: #701616; border-color: #701616; }
+
+        /* CITACIONES (ERRORES) */
+        .citation-slip {
+            background-color: #8c3232;
+            color: #111;
+            padding: 10px;
+            border: 2px solid #4a1515;
+            margin-top: 10px;
+            font-size: 1.2em;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .citation-slip.show { display: block; }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
 
         .hidden { display: none !important; }
-        
-        .hud { display: flex; justify-content: space-between; color: #7b8075; font-size: 1.2em; border-bottom: 1px solid #444; padding-bottom: 5px; }
-        
-        .citation {
-            background: #111;
-            color: #d0d0d0;
-            padding: 15px;
-            border: 2px solid #7b8075;
-            margin-top: 20px;
-            font-size: 1.2em;
+
+        /* PANTALLAS SUPERPUESTAS */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(18, 20, 18, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
         }
+
+        h1 { font-size: 4em; margin-bottom: 10px; text-shadow: 4px 4px 0 #000; color: #b0c4b6; }
     </style>
 </head>
 <body>
 
-<div class="desk">
-    <h1>MINISTERIO DE CIBERSEGURIDAD</h1>
+<div id="start-screen" class="overlay">
+    <h1>GLORIA AL SOC</h1>
+    <p style="font-size: 2em; margin-bottom: 30px;">Iniciando terminal de inspección...</p>
+    <button id="btn-start" class="btn-neutral" style="width: 300px;" onclick="startGame()" disabled>CONECTANDO...</button>
+</div>
+
+<div id="end-screen" class="overlay hidden">
+    <h1>TURNO FINALIZADO</h1>
+    <div id="final-stats" style="font-size: 2em; margin-bottom: 20px; text-align: center;"></div>
+    <div id="final-verdict" style="font-size: 2.5em; margin-bottom: 40px; text-align: center;"></div>
+    <button class="btn-neutral" style="width: 300px;" onclick="location.reload()">Siguiente Turno</button>
+</div>
+
+<div class="top-bar">
+    <span id="hud-date">Fecha: 1982-11-23</span>
+    <span>Ministerio de Información</span>
+    <span id="hud-penalties">Penalizaciones: 0</span>
+</div>
+
+<div class="desk-container">
     
-    <div id="start-screen" style="text-align: center; margin-top: 20vh;">
-        <h2 style="font-size: 2em; color: #d0d0d0;">GLORIA AL SOC</h2>
-        <p style="font-size: 1.5em; color: #7b8075;">Inspeccione los paquetes de datos.<br>Detecte anomalías de ingeniería social y falsificaciones.<br>Los errores serán penalizados.</p>
-        <button id="btn-start" class="btn-neutral" onclick="startGame()">DESCARGANDO MANIFIESTOS...</button>
-    </div>
-
-    <div id="game-screen" class="hidden" style="display: flex; flex-direction: column; flex-grow: 1;">
-        <div class="hud">
-            <span id="hud-level">Nivel de Alerta: 1</span>
-            <span id="hud-progress">Paquete: 0/0</span>
-            <span id="hud-score">Sanciones: 0</span>
-        </div>
-
-        <div class="paper" id="document-area">
+    <div class="document-area">
+        <div class="paper" id="document-paper">
             <div id="stamp" class="stamp"></div>
             
+            <div class="paper-header">Manifiesto de Tráfico de Red</div>
+            
             <div class="field">
-                <div class="label">Remitente:</div>
+                <div class="label">Remitente Registrado:</div>
                 <div class="data" id="f-sender"></div>
             </div>
             <div class="field" id="wrap-ip">
-                <div class="label">IP Origen:</div>
+                <div class="label">Origen (IP):</div>
                 <div class="data" id="f-ip"></div>
             </div>
             <div class="field">
-                <div class="label">Asunto:</div>
+                <div class="label">Asunto Declarado:</div>
                 <div class="data" id="f-subject"></div>
             </div>
             <div class="field" id="wrap-attachment">
-                <div class="label">Carga Útil / Enlace:</div>
+                <div class="label">Carga Adjunta:</div>
                 <div class="data" id="f-attachment"></div>
             </div>
-            <div class="field">
+            <div class="field" style="border: none;">
                 <div class="label">Cuerpo del Mensaje:</div>
-                <div class="data" id="f-body"></div>
-            </div>
-            
-            <div id="citation-box" class="citation hidden">
-                <div style="text-align: center; border-bottom: 1px solid #7b8075; margin-bottom: 10px;"><b>NOTIFICACIÓN OFICIAL</b></div>
-                <div id="citation-text"></div>
+                <div class="data" id="f-body" style="white-space: pre-wrap;"></div>
             </div>
         </div>
-
-        <div class="controls" id="action-buttons">
-            <button class="btn-deny" onclick="judge(false)">DENEGAR</button>
-            <button class="btn-allow" onclick="judge(true)">PERMITIR</button>
-        </div>
-        
-        <button id="btn-next" class="btn-neutral hidden" onclick="loadTicket()">SIGUIENTE PAQUETE</button>
     </div>
 
-    <div id="end-screen" class="hidden" style="text-align: center; margin-top: 20vh;">
-        <h2 style="font-size: 2.5em; color: #d0d0d0;">TURNO FINALIZADO</h2>
-        <p style="font-size: 1.5em; color: #7b8075;" id="final-stats"></p>
-        <p style="font-size: 1.5em;" id="final-verdict"></p>
-        <button class="btn-neutral" onclick="location.reload()">NUEVO TURNO</button>
+    <div class="tools-area">
+        
+        <div class="tool-box">
+            <div class="tool-title">Transmisión Entrante</div>
+            <div class="booth-dialogue" id="dialogue-box">
+                "Inspector, analice el documento en su escritorio. Decida su validez."
+            </div>
+        </div>
+
+        <div class="tool-box">
+            <div class="tool-title">Sello Oficial</div>
+            <div class="action-controls" id="action-buttons">
+                <button class="btn-deny" onclick="judge(false)">DENEGAR</button>
+                <button class="btn-allow" onclick="judge(true)">PERMITIR</button>
+            </div>
+            <button id="btn-next" class="btn-neutral hidden" onclick="loadTicket()">LLAMAR SIGUIENTE</button>
+        </div>
+
+        <div class="tool-box" style="flex-grow: 1; border-color: #301010; background-color: #1a0808;">
+            <div class="tool-title" style="color: #8c3232;">Protocolo de Infracciones</div>
+            <div id="citation-box" class="citation-slip">
+                <b>[ CITACIÓN EMITIDA ]</b><br><br>
+                <span id="citation-text"></span>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    // ====== REEMPLAZAR CON TU URL DE APPS SCRIPT ======
+    // ====== URL DEL BACKEND ======
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwopzfiiKD9QC7OHsBFFEjc6uWpYgxgryhHJ4zn648_oeZ6McU-KftYkW10cQTrOTj0/exec'; 
-    // ====================================================
+    // =============================
 
     let tickets = [];
     let currentIndex = 0;
@@ -185,13 +290,12 @@
             btn.innerText = "INICIAR TURNO";
             btn.disabled = false;
         } catch (e) {
-            document.getElementById('btn-start').innerText = "ERROR DE CONEXIÓN CON EL MINISTERIO";
+            document.getElementById('btn-start').innerText = "ERROR DE CONEXIÓN";
         }
     };
 
     function startGame() {
         document.getElementById('start-screen').classList.add('hidden');
-        document.getElementById('game-screen').classList.remove('hidden');
         loadTicket();
     }
 
@@ -200,30 +304,23 @@
 
         const t = tickets[currentIndex];
         
-        // Reset HUD
-        document.getElementById('hud-progress').innerText = `Paquete: ${currentIndex + 1}/${tickets.length}`;
-        document.getElementById('hud-level').innerText = `Nivel: ${t.nivel}`;
-        document.getElementById('hud-score').innerText = `Sanciones: ${penalties}`;
-        
         // Reset UI
         document.getElementById('stamp').className = 'stamp';
-        document.getElementById('citation-box').classList.add('hidden');
+        document.getElementById('citation-box').classList.remove('show');
         document.getElementById('action-buttons').classList.remove('hidden');
         document.getElementById('btn-next').classList.add('hidden');
+        document.getElementById('dialogue-box').innerText = `"Nivel de alerta: ${t.nivel}. Inspeccione."`;
 
-        // Populate Fields
+        // Datos del papel
         document.getElementById('f-sender').innerText = t.remitente;
         document.getElementById('f-subject').innerText = t.asunto;
         document.getElementById('f-body').innerText = t.cuerpo;
 
-        // Ocultar IP o Adjunto si no existen (para simular progresión de dificultad)
-        const ipWrap = document.getElementById('wrap-ip');
-        if(t.ip) { ipWrap.classList.remove('hidden'); document.getElementById('f-ip').innerText = t.ip; } 
-        else { ipWrap.classList.add('hidden'); }
-
-        const attWrap = document.getElementById('wrap-attachment');
-        if(t.adjunto) { attWrap.classList.remove('hidden'); document.getElementById('f-attachment').innerText = t.adjunto; } 
-        else { attWrap.classList.add('hidden'); }
+        // Ocultar IP/Adjunto si no hay datos
+        document.getElementById('wrap-ip').style.display = t.ip ? 'block' : 'none';
+        document.getElementById('f-ip').innerText = t.ip || '';
+        document.getElementById('wrap-attachment').style.display = t.adjunto ? 'block' : 'none';
+        document.getElementById('f-attachment').innerText = t.adjunto || '';
     }
 
     function judge(playerDecision) {
@@ -241,45 +338,44 @@
             stamp.classList.add('stamp-fail');
         }
         
-        // Disparar animación
         setTimeout(() => stamp.classList.add('show'), 50);
 
-        // Mostrar retroalimentación
-        const citation = document.getElementById('citation-box');
-        const citationText = document.getElementById('citation-text');
-        
         setTimeout(() => {
-            citation.classList.remove('hidden');
+            const citation = document.getElementById('citation-box');
+            const citationText = document.getElementById('citation-text');
+            
             if (isCorrect) {
-                citationText.innerHTML = `ANÁLISIS CORRECTO.<br><br><b>Detalles:</b> ${t.razon}`;
-                citationText.style.color = "#b8ffb8";
+                document.getElementById('dialogue-box').innerText = `"Decisión correcta. Continúe."`;
+                document.getElementById('dialogue-box').style.color = "#99ffaa";
             } else {
                 penalties++;
-                document.getElementById('hud-score').innerText = `Sanciones: ${penalties}`;
-                citationText.innerHTML = `<b>INFRACCIÓN REGISTRADA.</b> Se ha emitido una sanción.<br><br><b>Motivo:</b> ${t.razon}`;
-                citationText.style.color = "#ffb8b8";
+                document.getElementById('hud-penalties').innerText = `Penalizaciones: ${penalties}`;
+                document.getElementById('dialogue-box').innerText = `"Error detectado. Citación emitida."`;
+                document.getElementById('dialogue-box').style.color = "#ff9999";
+                
+                citationText.innerHTML = `Resolución inválida.<br><b>Motivo:</b> ${t.razon}`;
+                citation.classList.add('show');
             }
+            
             document.getElementById('btn-next').classList.remove('hidden');
             currentIndex++;
         }, 800);
     }
 
     function endGame() {
-        document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('end-screen').classList.remove('hidden');
-        
-        document.getElementById('final-stats').innerText = `Paquetes Procesados: ${tickets.length} | Sanciones Emitidas: ${penalties}`;
+        document.getElementById('final-stats').innerHTML = `Inspecciones: ${tickets.length}<br>Penalizaciones: ${penalties}`;
         
         const verdict = document.getElementById('final-verdict');
         if (penalties === 0) {
-            verdict.innerText = "Trabajo excepcional. La gloria de la red está asegurada.";
-            verdict.style.color = "#125e0a";
+            verdict.innerText = "Trabajo perfecto. Gloria al SOC.";
+            verdict.style.color = "#99ffaa";
         } else if (penalties <= 2) {
-            verdict.innerText = "Desempeño aceptable. Tenga más cuidado mañana.";
-            verdict.style.color = "#a8a078";
+            verdict.innerText = "Rendimiento aceptable. Se descontará de su sueldo.";
+            verdict.style.color = "#d6d0ba";
         } else {
-            verdict.innerText = "Negligencia grave detectada. Ha puesto en peligro el SOC.";
-            verdict.style.color = "#8a0303";
+            verdict.innerText = "Despedido. El Ministerio tomará acciones legales.";
+            verdict.style.color = "#ff9999";
         }
     }
 </script>
